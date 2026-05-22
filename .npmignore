@@ -1,0 +1,6 @@
+src/
+node_modules/
+.qwen/
+*.map
+tsconfig.json
+.gitignore

@@ -1,0 +1,68 @@
+{
+  "name": "openremote",
+  "version": "1.4.6",
+  "description": "OpenRemote CLI — control your AI coding agent (Codex, Qwen, Claude) from your iPhone",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "openremote": "./dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && node ./node_modules/typescript/bin/tsc",
+    "start": "node dist/index.js",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "openremote",
+    "codex",
+    "claude",
+    "qwen",
+    "ai",
+    "cli",
+    "remote",
+    "mobile",
+    "agent"
+  ],
+  "author": "YnsELY",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YnsELY/openremote-cli.git"
+  },
+  "homepage": "https://github.com/YnsELY/openremote-cli#readme",
+  "bugs": {
+    "url": "https://github.com/YnsELY/openremote-cli/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "gradient-string": "^3.0.0",
+    "log-update": "^6.1.0",
+    "node-pty": "^1.0.0",
+    "open": "^10.1.0",
+    "ora": "^8.2.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.14",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,47 @@
+import { EventEmitter } from "node:events";
+import type { ProviderRunner, ProviderSessionOptions } from "./provider-runner.js";
+import type { RunnerEvents } from "./types.js";
+export declare class CodexRunner extends EventEmitter implements ProviderRunner {
+    readonly provider: "codex";
+    private readonly client;
+    private readonly sessions;
+    private readonly sessionByThreadId;
+    constructor();
+    on<K extends keyof RunnerEvents>(event: K, fn: RunnerEvents[K]): this;
+    emit<K extends keyof RunnerEvents>(event: K, ...args: Parameters<RunnerEvents[K]>): boolean;
+    startSession(options: ProviderSessionOptions): void;
+    resumeSession(options: ProviderSessionOptions): void;
+    respondToSession(sessionId: string, requestId: string, optionIndex: number): {
+        ok: boolean;
+        error?: string;
+    };
+    inputToSession(sessionId: string, text: string, modelName?: string, planMode?: boolean, reasoningEffort?: string, approvalMode?: "full-auto" | "auto-edit" | "suggest", _attachments?: string[]): boolean;
+    cancelSession(sessionId: string): boolean;
+    finishSession(sessionId: string): boolean;
+    killAll(): void;
+    private createSessionEntry;
+    private openThread;
+    private startTurn;
+    private handleNotification;
+    private handleServerRequest;
+    private raiseCommandApproval;
+    private raiseFileChangeApproval;
+    private raisePermissionApproval;
+    private raiseUserInputRequest;
+    private handleTurnFailure;
+    private handleClientClosed;
+    private finalizeWithError;
+    private finalizeSession;
+    private setStatus;
+    private emitReadableBlock;
+    private setReasoningActive;
+    private setCommandRunning;
+    private emitFinalDiffIfNeeded;
+    private clearTransientStates;
+    private getSessionByThreadId;
+    private labelCommandDecision;
+    private labelFileDecision;
+    private ensureTrace;
+    private writeTrace;
+    private closeTrace;
+}
