@@ -13,6 +13,8 @@ function mapClaudeModel(name) {
         case "claude-sonnet-4-6":
         case "claude-sonnet-4":
             return "claude-sonnet-4-6";
+        case "claude-opus-4-8":
+            return "claude-opus-4-8";
         case "claude-opus-4-7":
         case "claude-opus-4-6":
         case "claude-opus-4":
