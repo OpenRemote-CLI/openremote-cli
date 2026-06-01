@@ -8,6 +8,37 @@ import { CLI_VERSION } from "./lib/version.js";
 // Display OpenRemote banner
 printBanner();
 
+// Check for a newer version in the background — never blocks startup.
+(async () => {
+  try {
+    const res = await fetch("https://registry.npmjs.org/openremote/latest", {
+      signal: AbortSignal.timeout(4_000),
+    });
+    if (!res.ok) return;
+    const data = await res.json() as { version?: string };
+    const latest = data.version;
+    if (!latest || latest === CLI_VERSION) return;
+
+    const parse = (v: string) => v.split(".").map(Number);
+    const [lMaj, lMin, lPat] = parse(latest);
+    const [cMaj, cMin, cPat] = parse(CLI_VERSION);
+    const isNewer =
+      lMaj > cMaj ||
+      (lMaj === cMaj && lMin > cMin) ||
+      (lMaj === cMaj && lMin === cMin && lPat > cPat);
+
+    if (isNewer) {
+      console.log(`\x1b[33m  ╔═══════════════════════════════════════════════════╗\x1b[0m`);
+      console.log(`\x1b[33m  ║  Update available: ${CLI_VERSION} → ${latest}`.padEnd(54) + `\x1b[33m║\x1b[0m`);
+      console.log(`\x1b[33m  ║  Run: npm install -g openremote@latest            ║\x1b[0m`);
+      console.log(`\x1b[33m  ╚═══════════════════════════════════════════════════╝\x1b[0m`);
+      console.log();
+    }
+  } catch {
+    // Network unavailable or timeout — silently skip
+  }
+})();
+
 const program = new Command();
 
 function withCliContext(action: () => Promise<void> | void) {
