@@ -374,6 +374,7 @@ export class ClaudeRunner extends EventEmitter {
             const imageLines = entry.attachments.map((filePath) => `[Image jointe: ${filePath}]\nLis cette image avec ton outil Read avant de répondre.`);
             effectivePrompt = `${imageLines.join("\n")}\n\n${entry.prompt}`;
         }
+        const mappedModel = mapClaudeModel(entry.modelName);
         const args = [
             "-p",
             effectivePrompt,
@@ -381,10 +382,20 @@ export class ClaudeRunner extends EventEmitter {
             "stream-json",
             "--verbose",
             "--model",
-            mapClaudeModel(entry.modelName),
+            mappedModel,
             "--permission-mode",
             permissionMode,
         ];
+        // Pass the reasoning effort through to Claude via the --effort flag.
+        // Valid levels: low | medium | high | xhigh | max. "max" is only
+        // accepted by Opus 4.8 — fall back to "xhigh" for any other model so
+        // the CLI doesn't reject the run.
+        const VALID_EFFORTS = new Set(["low", "medium", "high", "xhigh", "max"]);
+        let effort = VALID_EFFORTS.has(entry.reasoningEffort) ? entry.reasoningEffort : "medium";
+        if (effort === "max" && mappedModel !== "claude-opus-4-8") {
+            effort = "xhigh";
+        }
+        args.push("--effort", effort);
         // Resume an existing conversation
         if (resume && entry.providerSessionId) {
             args.push("--resume", entry.providerSessionId);
